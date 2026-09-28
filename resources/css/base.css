@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root { --ink: #17231f; --muted: #63736d; --paper: #f4f0e6; --panel: #fffdf7; --line: #d7d9ca; --accent: #d95f39; --accent-dark: #a9432b; --mint: #c8dfc2; --yellow: #f4d06f; --error: #c6443e; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; color: var(--ink); background: radial-gradient(circle at 15% 10%, #fff8d9 0 16%, transparent 36%), linear-gradient(135deg, var(--paper), #e3eee3); font-family: 'Space Grotesk', sans-serif; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+.shell { min-height: 100vh; max-width: 1120px; margin: 0 auto; padding: 32px 24px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-weight: 700; letter-spacing: .02em; }
+.brand-mark { display: grid; grid-template-columns: repeat(2, 8px); gap: 3px; padding: 8px; background: var(--accent); border-radius: 50%; }
+.brand-mark i { width: 8px; height: 8px; background: #fff7dc; border-radius: 2px; }
+.eyebrow { color: var(--accent-dark); font: 500 12px 'DM Mono', monospace; letter-spacing: .12em; text-transform: uppercase; }
+.muted { color: var(--muted); }
+.btn { border: 1px solid var(--ink); border-radius: 5px; padding: 12px 18px; background: var(--ink); color: white; font-weight: 600; transition: transform .16s, background .16s; }
+.btn:hover { transform: translateY(-2px); background: var(--accent-dark); }
+.btn.secondary { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn.secondary:hover { background: var(--panel); }
