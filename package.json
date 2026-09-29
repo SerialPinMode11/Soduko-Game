@@ -1,0 +1,38 @@
+{
+  "name": "soduko-nelson",
+  "version": "1.0.0",
+  "description": "Interactive Sudoku game plugin — mountable in any web project",
+  "type": "module",
+  "main": "./dist/soduko-nelson.umd.js",
+  "module": "./dist/soduko-nelson.js",
+  "exports": {
+    ".": {
+      "import": "./dist/soduko-nelson.js",
+      "require": "./dist/soduko-nelson.umd.js"
+    },
+    "./dist/soduko-nelson.css": "./dist/soduko-nelson.css",
+    "./style.css": "./dist/soduko-nelson.css"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "sudoku",
+    "game",
+    "plugin",
+    "widget"
+  ],
+  "license": "MIT",
+  "sideEffects": [
+    "*.css"
+  ],
+  "devDependencies": {
+    "vite": "^6.2.0"
+  }
+}

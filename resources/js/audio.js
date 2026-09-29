@@ -56,6 +56,38 @@ function playClick() {
   oscillator.stop(start + 0.08);
 }
 
+function playTone(frequency, start, duration, type = 'triangle', peak = 0.12) {
+  const oscillator = audioContext.createOscillator();
+  const envelope = audioContext.createGain();
+  oscillator.type = type;
+  oscillator.frequency.value = frequency;
+  envelope.gain.setValueAtTime(0.0001, start);
+  envelope.gain.exponentialRampToValueAtTime(peak, start + 0.02);
+  envelope.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+  oscillator.connect(envelope).connect(gainNode);
+  oscillator.start(start);
+  oscillator.stop(start + duration + 0.05);
+}
+
+export function playWinFanfare() {
+  ensureAudio();
+  const start = audioContext.currentTime + 0.02;
+  const notes = [523.25, 659.25, 783.99, 1046.5];
+  notes.forEach((frequency, index) => {
+    playTone(frequency, start + index * 0.14, 0.28, 'triangle', 0.14);
+  });
+  playTone(1318.51, start + 0.55, 0.35, 'sine', 0.1);
+}
+
+export function playLoseSting() {
+  ensureAudio();
+  const start = audioContext.currentTime + 0.02;
+  const notes = [392, 349.23, 311.13, 261.63];
+  notes.forEach((frequency, index) => {
+    playTone(frequency, start + index * 0.16, 0.3, 'sine', 0.11);
+  });
+}
+
 export function initAudio() {
   const begin = () => {
     ensureAudio();

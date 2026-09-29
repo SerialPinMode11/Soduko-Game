@@ -1,6 +1,6 @@
 import { fetchPuzzle } from './api.js';
 import { bot } from './bot.js';
-import { initAudio } from './audio.js';
+import { initAudio, playLoseSting, playWinFanfare } from './audio.js';
 import { clone, findConflicts, generate, isCompleteAndValid, newlyCompletedBlocks } from './sudoku-engine.js';
 
 const difficulty = sessionStorage.getItem('sudoku-level') || 'medium';
@@ -30,6 +30,11 @@ function awardCompletedBlocks() {
 
 function render() {
   const conflicts = findConflicts(state.board);
+  const selectedRow = Math.floor(state.selected / 9);
+  const selectedCol = state.selected % 9;
+  const selectedEmpty = !state.board[selectedRow][selectedCol];
+  const blockRow = Math.floor(selectedRow / 3) * 3;
+  const blockCol = Math.floor(selectedCol / 3) * 3;
   boardElement.replaceChildren();
   state.board.forEach((row, rowIndex) => row.forEach((value, columnIndex) => {
     const index = rowIndex * 9 + columnIndex;
@@ -41,6 +46,8 @@ function render() {
     cell.setAttribute('aria-label', `Row ${rowIndex + 1}, column ${columnIndex + 1}`);
     if (state.puzzle[rowIndex][columnIndex]) cell.classList.add('given');
     if (index === state.selected) cell.classList.add('selected');
+    const inBlock = rowIndex >= blockRow && rowIndex < blockRow + 3 && columnIndex >= blockCol && columnIndex < blockCol + 3;
+    if (selectedEmpty && (rowIndex === selectedRow || columnIndex === selectedCol || inBlock)) cell.classList.add('crosshair');
     if (conflicts.has(`${rowIndex}-${columnIndex}`)) cell.classList.add('conflict');
     if (value) { cell.textContent = value; if (value === state.selectedDigit) cell.classList.add('highlight-num'); }
     else if (state.notes[index].size) {
@@ -59,7 +66,8 @@ function checkSolved() {
     stopTimer();
     sessionStorage.setItem('sudoku-time', formatTime(state.seconds));
     bot.announce('win');
-    window.location.href = 'win.html';
+    playWinFanfare();
+    setTimeout(() => { window.location.href = 'win.html'; }, 900);
     return true;
   }
   return false;
@@ -82,7 +90,7 @@ function enterNumber(number) {
       state.board[row][column] = 0;
       setStatus('The bot spotted a conflict.');
       bot.announce('mistake', { left: 3 - state.mistakes });
-      if (state.mistakes >= 3) { stopTimer(); bot.announce('lose'); window.location.href = 'lose.html'; return; }
+      if (state.mistakes >= 3) { stopTimer(); bot.announce('lose'); playLoseSting(); setTimeout(() => { window.location.href = 'lose.html'; }, 900); return; }
     } else { setStatus('Good placement. Keep looking for the next certain move.'); awardCompletedBlocks(); }
   }
   mistakesElement.textContent = `${state.mistakes} / 3`;

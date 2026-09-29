@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sudoku / Solved</title>
+  <link rel="stylesheet" href="css/base.css">
+  <style>
+    .result { min-height: 80vh; display: grid; place-items: center; text-align: center; }
+    .result h1 { font-size: clamp(4rem, 12vw, 10rem); line-height: .8; letter-spacing: -.08em; margin: 20px 0; }
+    .result p { color: var(--muted); font-size: 1.1rem; margin-bottom: 30px; }
+    #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+  </style>
+</head>
+<body>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <main class="shell result">
+    <section>
+      <p class="eyebrow">Board complete</p>
+      <h1>Well<br>solved.</h1>
+      <p id="result-copy">You found the shape of it.</p>
+      <a class="btn" href="level.html">Play another</a>
+    </section>
+  </main>
+  <script>
+    const player = sessionStorage.getItem('sudoku-player') || 'Player';
+    document.querySelector('#result-copy').textContent = `${player}, you found the shape of it.`;
+
+    const canvas = document.querySelector('#confetti');
+    const ctx = canvas.getContext('2d');
+    const colors = ['#e07a3d', '#f2c94c', '#7eb6a2', '#2f6f5e', '#17231f', '#b7e1ee'];
+    let pieces = [];
+    let start = 0;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function spawn() {
+      pieces = Array.from({ length: 120 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height * -0.4,
+        w: 6 + Math.random() * 8,
+        h: 8 + Math.random() * 10,
+        vx: -2 + Math.random() * 4,
+        vy: 2 + Math.random() * 4,
+        rot: Math.random() * Math.PI,
+        vr: -0.2 + Math.random() * 0.4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+      }));
+    }
+
+    function frame(time) {
+      if (!start) start = time;
+      const elapsed = time - start;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pieces.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
+        p.vy += 0.03;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      });
+      if (elapsed < 3200) requestAnimationFrame(frame);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    resize();
+    spawn();
+    window.addEventListener('resize', resize);
+    requestAnimationFrame(frame);
+  </script>
+</body>
+</html>

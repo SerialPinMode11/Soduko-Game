@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>soduko-nelson example</title>
+  <link rel="stylesheet" href="../dist/soduko-nelson.css">
+  <style>
+    html, body { margin: 0; min-height: 100%; }
+    #sudoku-root { min-height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="sudoku-root"></div>
+  <script type="module">
+    import { mountSudoku } from '../dist/soduko-nelson.js';
+    mountSudoku(document.getElementById('sudoku-root'), {
+      onReady: () => console.log('soduko-nelson ready'),
+      onWin: (stats) => console.log('win', stats),
+      onLose: (stats) => console.log('lose', stats),
+    });
+  </script>
+</body>
+</html>
